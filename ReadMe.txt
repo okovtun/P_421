@@ -4,6 +4,10 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
 TODO:
+1. При выходе из программы во время работы метода panel() вылетает исключение, эту проблему нужно решить;
+2. Двинатель должен заводиться и расходовать топливо;
+
+TODO:
 1. Нарисовать UML-диаграмму компьютера;
 
 DONE:
