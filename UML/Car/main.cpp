@@ -1,4 +1,5 @@
 ﻿#pragma warning(disable:4326)
+#include<Windows.h>
 #include<iostream>
 #include<conio.h>
 #include<thread>
@@ -28,6 +29,12 @@ public:
 		if (amount < 0) return;
 		if (fuel_level + amount < VOLUME)fuel_level += amount;
 		else fuel_level = VOLUME;
+	}
+	double give_fuel(double amount)
+	{
+		fuel_level -= amount;
+		if (fuel_level < 0)fuel_level = 0;
+		return fuel_level;
 	}
 	Tank(int volume) :
 		VOLUME
@@ -64,6 +71,10 @@ class Engine
 	double consumption_per_second;	//Расход топлива за 1 секунду
 	bool is_started;
 public:
+	double get_consumption_per_second()const
+	{
+		return consumption_per_second;
+	}
 	Engine(double consumption) :
 		CONSUMPTION
 		(
@@ -113,6 +124,7 @@ class Car
 	struct Threads	//Создаем и описываем структуру
 	{
 		std::thread panel_thread;
+		std::thread engine_idle_thread;
 	}threads;		//Создаем экземпляр этой структуры сразу же после ее описания
 public:
 	Car(int consumption, int volume, int max_speed = 250) :
@@ -147,6 +159,16 @@ public:
 		system("CLS");	//Очистка экрана
 		cout << "You are out of you car" << endl;
 	}
+	void start()
+	{
+		engine.start();
+		threads.engine_idle_thread = std::thread(&Car::engine_idle, this);
+	}
+	void stop()
+	{
+		engine.stop();
+		if (threads.engine_idle_thread.joinable())threads.engine_idle_thread.join();
+	}
 	void control()
 	{
 		char key;
@@ -161,19 +183,47 @@ public:
 				break;
 			case 'F':
 			case 'f':
-				double amount;
-				cout << "How much do you whant: "; cin >> amount;
-				tank.fill(amount);
+				if (driver_inside)
+				{
+					cout << "Get out of your car\a" << endl;
+				}
+				else
+				{
+					double amount;
+					cout << "How much do you whant: "; cin >> amount;
+					tank.fill(amount);
+				}
 				break;
+			case 'i':	//Ignition - зажигание
+			case 'I':
+				if (engine.started())stop();
+				else start();
+				break;
+			case Escape:
+				stop();
+				get_out();
 			}
 		} while (key != Escape);
+	}
+	void engine_idle()
+	{
+		while (engine.started() && tank.give_fuel(engine.get_consumption_per_second()))
+			std::this_thread::sleep_for(1s);
 	}
 	void panel()const
 	{
 		while (driver_inside)
 		{
 			system("CLS");
-			cout << "Fuel level: " << tank.get_fuel_level() << " liters.\n";
+			cout << "Fuel level: " << tank.get_fuel_level() << " liters.";
+			if (tank.get_fuel_level() < 5)
+			{
+				HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+				SetConsoleTextAttribute(hConsole, 0xCF);
+				cout << " LOW FUEL ";
+				SetConsoleTextAttribute(hConsole, 0x07);
+			}
+			cout << endl;
 			cout << "Engine is " << (engine.started() ? "started" : "stopped") << endl;
 			std::this_thread::sleep_for(500ms);
 		}
