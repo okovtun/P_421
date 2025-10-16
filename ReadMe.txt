@@ -4,6 +4,16 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
 TODO:
+1. Зарегистрироваться на github.com;
+2. Расход топлива за 1 секунду должен изменяться следующим образом:
+	The consumption for a driving car is be taken from these ranges:
+		  1 -  60 km/h -> 0.0020 liter/second
+		 61 - 100 km/h -> 0.0014 liter/second
+		101 - 140 km/h -> 0.0020 liter/second
+		141 - 200 km/h -> 0.0025 liter/second
+		201 - 250 km/h -> 0.0030 liter/second
+
+DONE:
 1. При выходе из программы во время работы метода panel() вылетает исключение, эту проблему нужно решить;
 2. Двинатель должен заводиться и расходовать топливо;
 
