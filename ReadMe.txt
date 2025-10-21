@@ -4,6 +4,11 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
 TODO:
+1. Скачать AnyDesk:https://anydesk.com/en/downloads/thank-you?dv=win_exe
+   Программа должна храниться на рабочем столе, и должна быть закреплена в меню "Пуск";
+
+
+TODO:
 1. Зарегистрироваться на github.com;
 2. Расход топлива за 1 секунду должен изменяться следующим образом:
 	The consumption for a driving car is be taken from these ranges:
