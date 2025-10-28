@@ -4,6 +4,10 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
 TODO:
+1. В проект 'Academy' добавить классы 'Student' и 'Teacher';
+2. Залить проект на GitHub и прислать ссылку на репозиторий;
+
+TODO:
 1. Скачать AnyDesk:https://anydesk.com/en/downloads/thank-you?dv=win_exe
    Программа должна храниться на рабочем столе, и должна быть закреплена в меню "Пуск";
 
