@@ -89,9 +89,9 @@ public:
 	{
 		cout << "HDestructor:\t" << this << endl;
 	}
-	virtual void info()const
+	virtual std::ostream& info(std::ostream& os)const
 	{
-		cout << LAST_NAME << " " << FIRST_NAME << " " << get_age() << endl;
+		return os << LAST_NAME << " " << FIRST_NAME << " " << get_age();
 	}
 	/*
 	-----------------------------
@@ -105,6 +105,14 @@ public:
 	-----------------------------
 	*/
 };
+std::ostream& operator<<(std::ostream& os, const Human& obj)
+{
+	return obj.info(os);
+	/*return os 
+		<< obj.get_last_name() 
+		<< " " << obj.get_first_name() 
+		<< " " << obj.get_age();*/
+}
 
 #define ACADEMY_MEMBER_TAKE_PARAMETERS const std::string& speciality
 #define ACADEMY_MEMBER_GIVE_PARAMETERS speciality
@@ -129,10 +137,11 @@ public:
 	{
 		cout << "AMDestructor:\t" << this << endl;
 	}
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Human::info();	//Вызываем метод info() для класса 'Human'.
-		cout << speciality << endl;
+		return Human::info(os) << " " << speciality;
+		//Human::info(os);	//Вызываем метод info() для класса 'Human'.
+		//cout << speciality << endl;
 	}
 };
 
@@ -184,10 +193,11 @@ public:
 	}
 
 	//			/Methods:
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		AcademyMember::info();
-		cout << group << " " << rating << " " << attendance << endl;
+		return AcademyMember::info(os) << " " << group << " " << rating << " " << attendance;
+		//AcademyMember::info();
+		//cout << group << " " << rating << " " << attendance << endl;
 	}
 };
 
@@ -217,10 +227,11 @@ public:
 		cout << "TDestructor:\t" << this << endl;
 	}
 	//				Methods:
-	void info()const 
+	std::ostream& info(std::ostream& os)const 
 	{
-		AcademyMember::info();
-		cout << experience << endl;
+		return AcademyMember::info(os) << " " << experience;
+		//AcademyMember::info();
+		//cout << experience << endl;
 	}
 };
 
@@ -253,10 +264,11 @@ public:
 	{
 		cout << "GDestructor:\t" << this << endl;
 	}
-	void info()const override
+	std::ostream& info(std::ostream& os)const override
 	{
-		Student::info();
-		cout << subject << endl;
+		return Student::info(os) << " " << subject;
+		//Student::info();
+		//cout << subject << endl;
 	}
 };
 
@@ -294,7 +306,9 @@ void main()
 	cout << delimiter << endl;
 	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
 	{
-		group[i]->info();
+		//group[i]->info();
+		//<< - оператор перенаправления в поток
+		cout << *group[i] << endl;
 		cout << delimiter << endl;
 	}
 	/*

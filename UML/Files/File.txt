@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="ru-RU" ng-app="app" ng-controller="baseCtrl" ng-cloak>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" href="https://omni.top-academy.ru/favicon.ico?v=2"/>
+    <meta name="csrf-param" content="_csrf">
+<meta name="csrf-token" content="3CRC3CzStMBT6JQGkzo98ML1_NTQQu7WEn38vvcqw-LqYnK2forxiB7Z3XL7DGeosI2bmLwmhKYlSLrM2h2OlA==">
+    <title></title>
+    <link href="/assets/2527d332/bootstrap/dist/css/bootstrap.css?v=1761739025" rel="stylesheet">
+<link href="/assets/2527d332/angular-material/angular-material.min.css?v=1761739025" rel="stylesheet">
+<link href="/assets/2527d332/angular-tablesort/tablesort.css?v=1761739024" rel="stylesheet">
+<link href="/assets/d23ddab0/chosen.css?v=1761739026" rel="stylesheet">
+<link href="/css/fonts.css?v=1759925933" rel="stylesheet">
+<link href="/css/site.css?v=1759925933" rel="stylesheet">
+<link href="/css/main.css?v=1761739013" rel="stylesheet">
+<link href="/css/media.css?v=1647435320" rel="stylesheet">
+                <!-- Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+                    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+                'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+            })(window,document,'script','dataLayer','GTM-KQ2TR72');</script>
+        <!-- End Google Tag Manager -->
+        <script async src="https://cdnjs.cloudflare.com/ajax/libs/angular-material/1.0.9/angular-material.min.js"></script>
+        <script>
+        var YII_ENV = 'prod';
+    </script>
+</head>
+<body class="main">
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KQ2TR72"
+                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+<main class="content" resize >
+    <div class="open-menu-block" ng-if="!isOpenLeft()" ng-click="openSidebar()"></div>
+    <md-sidenav class="md-sidenav-left main-sidenav {{isOpenLeft() ? 'sidenav-active' : ''}}"  md-component-id="left" ng-mouseleave="closeSidebar()">
+        <md-content layout-margin>
+            <!--            переход только для Рио-->
+                            <span ng-class="{'visibility-hidden': !isOpenLeft()}">
+                <div ng-controller="profileCtrl" class="avatar-holder">
+                    <img class="avatar" ng-src="{{form.photo_pas}}" alt="avatar">
+                </div>
+                <div class="user_name">Ковтун Олег</div>
+            </span>
+                        <ul class="main-menu" ng-class="{'hidden-menu': !isOpenLeft()}">
+                <li class="bold" ng-class="{active: activeNav == 'dossier'}"
+                    ng-click="isOpenLeft() ? setActiveNow('dossier') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" href="#" ui-sref="dossier" class="waves-effect waves-light icon-dossier">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'dossier' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold schedulePage" ng-class="{active: activeNav == 'schedulePage'}"
+                    ng-click="isOpenLeft() ? setActiveNow('schedulePage'): $event.stopPropagation(); ">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="schedulePage" class="waves-effect waves-light icon-schedulePage">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'schedule' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'presents'}"
+                    ng-click="isOpenLeft() ? setActiveNow('presents') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="presents" class="waves-effect waves-light icon-presents">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'presents' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'classWork'}"
+                    ng-click="isOpenLeft() ? setActiveNow('classWork') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="classWork"   class="waves-effect waves-light icon-class-work">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'home_marks' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'homeWork'}"
+                    ng-click="isOpenLeft() ? setActiveNow('homeWork') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="homeWork" class="waves-effect waves-light icon-homeworks">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'homeworks_short' | translate}}</span>
+                        <div class="orange-count__wrap">
+                            <span ng-show="count_new_hw > 0" class="orange-count">{{count_new_hw}}</span>
+                            <span class="labWork orange-count" ng-show="count_new_lw > 0">{{count_new_lw}}</span>
+                        </div>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'exams'}"
+                    ng-click="isOpenLeft() ? setActiveNow('exams') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="exams" class="waves-effect waves-light icon-my-exams">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'my_exams' | translate}}</span>
+                        <span class="orange-count" ng-show="count_new_exams > 0">{{count_new_exams}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'students.list'}"
+                    ng-click="isOpenLeft() ? setActiveNow('students.list') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="students.list" class="waves-effect waves-light icon-students">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'students' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'traffic'}"
+                    ng-click="isOpenLeft() ? setActiveNow('traffic') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="traffic" class="waves-effect waves-light icon-potential-losses">
+                        <span class="side-text" ng-if="isOpenLeft()" >{{'potential_losses' | translate}}</span>
+                        <span class="labWork orange-count" ng-show="notDoneTask.potentialLosses.counter_not_work + count_tr_stud > 0">{{notDoneTask.potentialLosses.counter_not_work + count_tr_stud}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'bind.materials'}"
+                    ng-click="isOpenLeft() ? setActiveNow('bind.materials') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="bind.materials" class="waves-effect waves-light icon-materials">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'materials' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'news' || activeNav == undefined}"
+                    ng-click="isOpenLeft() ? setActiveNow('news') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="news" class="waves-effect waves-light icon-news">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'news' | translate}}</span>
+                        <span ng-show="count_unread_news > 0" class="orange-count">{{count_unread_news}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'groupsPage'}"
+                    ng-click="isOpenLeft() ? setActiveNow('groupsPage') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="groupsPage" class="waves-effect waves-light icon-groups-vizit">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'groups_vizit' | translate}}</span>
+                    </a>
+                </li>
+                <li ng-show="is_design" class="bold" ng-class="{active: activeNav == 'portfolio'}"
+                    ng-click="isOpenLeft() ? setActiveNow('portfolio') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="portfolio" class="waves-effect waves-light icon-portfolio">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'portfolio' | translate}}</span>
+                        <span ng-show="count_portfolio_request > 0" class="orange-count">{{count_portfolio_request}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'report'}"
+                    ng-click="isOpenLeft() ? setActiveNow('report') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="report" class="waves-effect waves-light icon-report">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'reports' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'tasks'}"
+                    ng-click="isOpenLeft() ? setActiveNow('tasks') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="tasks"class="waves-effect waves-light icon-tasks">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'tasks' | translate}}</span>
+                    </a>
+                </li>
+                <li class="bold" ng-class="{active: activeNav == 'content_author'}"
+                    ng-click="isOpenLeft() ? setActiveNow('content_author') : $event.preventDefault(); $event.stopPropagation()">
+                    <a ng-click="!isOpenLeft() ?  $event.preventDefault() : '';" ui-sref="content_author" class="waves-effect waves-light icon-content-author">
+                        <span class="side-text" ng-if="isOpenLeft()">{{'content_author' | translate}}</span>
+                    </a>
+                </li>
+            </ul>
+        </md-content>
+                        <i ng-click="closeSidebar(); $event.stopPropagation()" class="material-icons" ng-class="{'visibility-hidden': !isOpenLeft()}">chevron_left</i>
+    </md-sidenav>
+    <toolbar>
+
+        
+                <div ng-if="winWidth < 768" class="pull-right">
+            <md-menu class="latest_news">
+                <span ng-click="$mdOpenMenu($event);" class="">
+                    <span><i class="material-icons menu_btn">menu</i></span>
+                </span>
+                <md-menu-content width="3" id="new" style="max-height: none !important;"
+                                 class="md_sub_menu md_header_menu">
+                    <div class="md_header_menu" flex layout="row" layout-align="space-around center">
+                                                <span><a ui-sref="profile"><i class="material-icons svg-icons icon-setting"></i></a></span>
+                                                <span><a ng-click="clearLocalStorage()" href="/auth/logout"><i class="material-icons svg-icons icon-exit"></i></a></span>
+                    </div>
+                </md-menu-content>
+            </md-menu>
+        </div>
+        <div class="pull-right" ng-if="winWidth > 767">
+            <span>
+                <md-menu class="latest_news">
+                    <i class="material-icons svg-icons icon-estimation" ng-click="$mdOpenMenu($event)"></i>
+                    <md-menu-content width="4" id="new" class="md_header_menu">
+                        <span ng-if="avg_evaluation_lesson_mark" class="evaluation-mark">{{'avg_evaluation_mark' | translate}} <span
+                                    class="evaluation-lesson_mark">{{avg_evaluation_lesson_mark}}</span></span>
+                        <span ng-if="!avg_evaluation_lesson_mark" class="evaluation-mark">{{'have_not_avg_evaluation_mark' | translate}}</span>
+                        <div class="star-tooltip">
+                            <img class="star-tooltip__img" src="/img/home/icon-info.svg" alt="">
+                            <span class="star-tooltip__text">{{'avg_evaluation_mark_info' | translate}}</span>
+                        </div>
+                    </md-menu-content>
+                </md-menu>
+            </span>
+                        <span><a ui-sref="profile"><i class="material-icons svg-icons icon-setting"></i></a></span>
+            <span><a ng-click="clearLocalStorage()" href="/auth/logout"><i class="material-icons svg-icons icon-exit"></i></a></span>
+        </div>
+
+        <div class="pull-right" ng-if="winWidth > 767">
+            <span ng-show="notDoneTask.cityViewCounter" ng-click="showTeachingNotifications($event)" class="teaching-notifications">
+                         <i class="material-icons">school</i>
+                    <i class="count counter-notifications" ng-if="notDoneTask.counterNodDoneTask || count_tr_stud">{{notDoneTask.counterNodDoneTask + count_tr_stud}}</i>
+            </span>
+            <span ng-if="signalExist">
+                <span class="{{countSignals != 0 ? 'count-signals' : ''}}" ng-click="showPrerenderedDialog($event)">
+                         <i class="material-icons">report_problem</i>
+                    <i ng-show="countSignals != 0" class="count">{{countSignals}}</i>
+                </span>
+            </span>
+        </div>
+    </toolbar>
+    <div ui-view></div>
+</main>
+<loading></loading>
