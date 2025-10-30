@@ -4,6 +4,9 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
 TODO:
+1. В проект 'Academy' добавить класс 'Graduate' который описывает Дипломника;
+
+DONE:
 1. В проект 'Academy' добавить классы 'Student' и 'Teacher';
 2. Залить проект на GitHub и прислать ссылку на репозиторий;
 

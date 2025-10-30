@@ -93,6 +93,17 @@ public:
 	{
 		cout << LAST_NAME << " " << FIRST_NAME << " " << get_age() << endl;
 	}
+	/*
+	-----------------------------
+	__vfptr - Virtual Functions Pointers (Таблица указателей на виртуальные функции)
+	virtual type name(parameters) modifiers
+	{
+		......;
+		......;
+		......;
+	}
+	-----------------------------
+	*/
 };
 
 #define ACADEMY_MEMBER_TAKE_PARAMETERS const std::string& speciality
@@ -126,7 +137,7 @@ public:
 };
 
 #define STUDENT_TAKE_PARAMETERS const std::string& group, double rating, double attendance
-#define STUDENT_GIVE_PARAMETERS const group, rating, attendance
+#define STUDENT_GIVE_PARAMETERS group, rating, attendance
 class Student :public AcademyMember
 {
 	std::string group;
@@ -206,10 +217,46 @@ public:
 		cout << "TDestructor:\t" << this << endl;
 	}
 	//				Methods:
-	void info()const override
+	void info()const 
 	{
 		AcademyMember::info();
 		cout << experience << endl;
+	}
+};
+
+#define GRADUATE_TAKE_PARAMETERS const std::string& subject
+#define GRADUATE_GIVE_PARAMETERS subject
+class Graduate :public Student
+{
+	std::string subject;
+public:
+	const std::string& get_subject()const
+	{
+		return subject;
+	}
+	void set_subject(const std::string& subject)
+	{
+		this->subject = subject;
+	}
+	Graduate
+	(
+		HUMAN_TAKE_PARAMETERS,
+		ACADEMY_MEMBER_TAKE_PARAMETERS,
+		STUDENT_TAKE_PARAMETERS,
+		GRADUATE_TAKE_PARAMETERS
+	) :Student(HUMAN_GIVE_PARAMETERS, ACADEMY_MEMBER_GIVE_PARAMETERS, STUDENT_GIVE_PARAMETERS)
+	{
+		set_subject(subject);
+		cout << "GConstructor:\t" << this << endl;
+	}
+	~Graduate()
+	{
+		cout << "GDestructor:\t" << this << endl;
+	}
+	void info()const override
+	{
+		Student::info();
+		cout << subject << endl;
 	}
 };
 
@@ -233,14 +280,15 @@ void main()
 	Teacher teacher("Einstein", "Albert", "1979.03.14", "Astronomy", 20);
 	teacher.info();
 #endif // INHERITANCE
-
+	//Generalisation - обобщение;
+	//Upcast - это приведение дочернего объекта к базовому типу;
 	Human* group[] =
 	{
 		new Student("Чухарев", "Матвей", "2009.09.02", "Разработка программного обеспечения", "P_421", 100, 100),
 		new Teacher("Einstein", "Albert", "1979.03.14", "Astronomy", 20),
 		new Student("Гусев", "Савелий", "2010.08.29", "Разработка программного обеспечения", "P_421",98,98),
 		new Teacher("Олег", "Анатольевич","1985.01.16", "Разработка программного обеспечения", 16),
-		new Student("Львов", "Константин", "2009.09.21", "Разработка программного обеспечения", "P_421", 100, 98)
+		new Graduate("Львов", "Константин", "2009.09.21", "Разработка программного обеспечения", "P_421", 100, 98, "Разработка системы доставки пиццы")
 	};
 	cout << sizeof(group) << endl;
 	cout << delimiter << endl;
@@ -249,5 +297,12 @@ void main()
 		group[i]->info();
 		cout << delimiter << endl;
 	}
-
+	/*
+	Полиморфизм (Polymorphism)
+	Polymorphism (poly - много, morphis - форма)
+	AdHoc polymorphism
+	Runtime polymorphism
+		1. Указатели на базовый класс;
+		2. Виртуальные функции; Specialization
+	*/
 }
