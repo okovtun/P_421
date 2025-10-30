@@ -3,7 +3,14 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
-TODO:
+DONE:
+1. Из файла '201 RAW.txt' создать файл '201 ready.txt', и в этом файле	DONE
+   столбики с IP и MAC адресом должны быть поменяны местами.
+	https://github.com/okovtun/P_421/blob/master/Files%20task/201%20RAW.txt
+2. На основании файла '201 RAW.txt' создать файл вида '201.dhcpd':		DONE
+	https://github.com/okovtun/P_421/blob/master/Files%20task/201.dhcpd
+
+DONE:
 1. В проект 'Academy' добавить класс 'Graduate' который описывает Дипломника;
 
 DONE:
