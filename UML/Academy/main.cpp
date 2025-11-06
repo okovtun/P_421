@@ -1,5 +1,6 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
+#include<fstream>
 #include<string>
 #include<time.h>
 using std::cin;
@@ -26,6 +27,11 @@ using std::endl;
 //#ifdef MACROS ... #endif
 class Human
 {
+	static const int TYPE_WIDTH = 9;
+	static const int LAST_NAME_WIDTH = 12;
+	static const int FIRST_NAME_WIDTH = 12;
+	static const int AGE_WIDTH = 5;
+
 	const std::string LAST_NAME;
 	const std::string FIRST_NAME;
 	const tm BIRTH_DATE;
@@ -91,7 +97,21 @@ public:
 	}
 	virtual std::ostream& info(std::ostream& os)const
 	{
-		return os << LAST_NAME << " " << FIRST_NAME << " " << get_age();
+		//return os << LAST_NAME << " " << FIRST_NAME << " " << get_age();
+		os.width(TYPE_WIDTH);
+		os << std::left;
+		os << std::string(typeid(*this).name() + 6) + ":";
+		os.width(LAST_NAME_WIDTH);
+		os << LAST_NAME;
+		os.width(FIRST_NAME_WIDTH);
+		os << FIRST_NAME;
+		os.width(AGE_WIDTH);
+		os << get_age();
+		return os;
+	}
+	virtual std::ifstream& read(std::ifstream& is)
+	{
+
 	}
 	/*
 	-----------------------------
@@ -108,16 +128,21 @@ public:
 std::ostream& operator<<(std::ostream& os, const Human& obj)
 {
 	return obj.info(os);
-	/*return os 
-		<< obj.get_last_name() 
-		<< " " << obj.get_first_name() 
+	/*return os
+		<< obj.get_last_name()
+		<< " " << obj.get_first_name()
 		<< " " << obj.get_age();*/
+}
+std::ifstream& operator>>(std::ifstream& is, Human& obj)
+{
+
 }
 
 #define ACADEMY_MEMBER_TAKE_PARAMETERS const std::string& speciality
 #define ACADEMY_MEMBER_GIVE_PARAMETERS speciality
 class AcademyMember :public Human
 {
+	const int SPECIALITY_WIDTH = 40;
 	std::string speciality;
 public:
 	const std::string get_speciality()const
@@ -139,7 +164,11 @@ public:
 	}
 	std::ostream& info(std::ostream& os)const override
 	{
-		return Human::info(os) << " " << speciality;
+		//return Human::info(os) << " " << speciality;
+		Human::info(os);
+		os.width(SPECIALITY_WIDTH);
+		os << speciality;
+		return os;
 		//Human::info(os);	//Вызываем метод info() для класса 'Human'.
 		//cout << speciality << endl;
 	}
@@ -149,6 +178,9 @@ public:
 #define STUDENT_GIVE_PARAMETERS group, rating, attendance
 class Student :public AcademyMember
 {
+	static const int GROUP_WIDTH = 5;
+	static const int RATING_WIDTH = 5;
+	static const int ATTENDANCE_WIDTH = 5;
 	std::string group;
 	double rating;
 	double attendance;
@@ -195,7 +227,15 @@ public:
 	//			/Methods:
 	std::ostream& info(std::ostream& os)const override
 	{
-		return AcademyMember::info(os) << " " << group << " " << rating << " " << attendance;
+		//return AcademyMember::info(os) << " " << group << " " << rating << " " << attendance;
+		AcademyMember::info(os);
+		os.width(GROUP_WIDTH);
+		os << group;
+		os.width(RATING_WIDTH);
+		os << rating;
+		os.width(ATTENDANCE_WIDTH);
+		os << attendance;
+		return os;
 		//AcademyMember::info();
 		//cout << group << " " << rating << " " << attendance << endl;
 	}
@@ -227,7 +267,7 @@ public:
 		cout << "TDestructor:\t" << this << endl;
 	}
 	//				Methods:
-	std::ostream& info(std::ostream& os)const 
+	std::ostream& info(std::ostream& os)const
 	{
 		return AcademyMember::info(os) << " " << experience;
 		//AcademyMember::info();
@@ -272,6 +312,9 @@ public:
 	}
 };
 
+void Print(Human* group[], const int n);
+void Save(Human* group[], const int n, const std::string& filename);
+
 //#define INHERITANCE
 
 void main()
@@ -302,15 +345,8 @@ void main()
 		new Teacher("Олег", "Анатольевич","1985.01.16", "Разработка программного обеспечения", 16),
 		new Graduate("Львов", "Константин", "2009.09.21", "Разработка программного обеспечения", "P_421", 100, 98, "Разработка системы доставки пиццы")
 	};
-	cout << sizeof(group) << endl;
-	cout << delimiter << endl;
-	for (int i = 0; i < sizeof(group) / sizeof(group[0]); i++)
-	{
-		//group[i]->info();
-		//<< - оператор перенаправления в поток
-		cout << *group[i] << endl;
-		cout << delimiter << endl;
-	}
+	Print(group, sizeof(group) / sizeof(group[0]));
+	Save(group, sizeof(group) / sizeof(group[0]), "group.txt");
 	/*
 	Полиморфизм (Polymorphism)
 	Polymorphism (poly - много, morphis - форма)
@@ -319,4 +355,28 @@ void main()
 		1. Указатели на базовый класс;
 		2. Виртуальные функции; Specialization
 	*/
+}
+void Print(Human* group[], const int n)
+{
+	cout << sizeof(group) << endl;
+	cout << delimiter << endl;
+	for (int i = 0; i < n; i++)
+	{
+		//group[i]->info();
+		//<< - оператор перенаправления в поток
+		cout << *group[i] << endl;
+		cout << delimiter << endl;
+	}
+}
+void Save(Human* group[], const int n, const std::string& filename)
+{
+	std::ofstream fout(filename);
+	for (int i = 0; i < n; i++)
+	{
+		fout /*<< typeid(*group[i]).name() + 6 << ":"*/ << *group[i] << endl;
+	}
+	fout.close();
+	std::string cmd = "notepad ";
+	cmd += filename;
+	system(cmd.c_str());
 }
