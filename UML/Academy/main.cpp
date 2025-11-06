@@ -31,22 +31,28 @@ class Human
 	static const int LAST_NAME_WIDTH = 12;
 	static const int FIRST_NAME_WIDTH = 12;
 	static const int AGE_WIDTH = 5;
+	static const int TIMESTAMP_WIDTH = 11;
 
-	const std::string LAST_NAME;
-	const std::string FIRST_NAME;
-	const tm BIRTH_DATE;
+	std::string last_name;
+	std::string first_name;
+	tm birth_date;
 public:
 	const std::string& get_last_name()const
 	{
-		return LAST_NAME;
+		return last_name;
 	}
 	const std::string& get_first_name()const
 	{
-		return FIRST_NAME;
+		return first_name;
 	}
 	tm get_birth_date()const
 	{
-		return BIRTH_DATE;
+		return birth_date;
+	}
+	time_t get_birth_date_timestamp()const
+	{
+		tm birth_date = this->birth_date;
+		return mktime(&birth_date);
 	}
 	int get_age()const
 	{
@@ -54,7 +60,7 @@ public:
 		time_t t_today = time(NULL);
 		tm tm_today = *localtime(&t_today);
 		//2) Преобразуем дату рождения в формат Timestamp:
-		tm birth_date = BIRTH_DATE;
+		tm birth_date = this->birth_date;
 		time_t t_birth_date = mktime(&birth_date);
 
 		//3) Находим разницу во времени:
@@ -87,7 +93,7 @@ public:
 		return tm_birth_date;
 	}
 	Human(HUMAN_TAKE_PARAMETERS) :
-		LAST_NAME(last_name), FIRST_NAME(first_name), BIRTH_DATE(parse_date(birth_date))
+		last_name(last_name), first_name(first_name), birth_date(parse_date(birth_date))
 	{
 		cout << "HConstructor:\t" << this << endl;
 	}
@@ -102,17 +108,29 @@ public:
 		os << std::left;
 		os << std::string(typeid(*this).name() + 6) + ":";
 		os.width(LAST_NAME_WIDTH);
-		os << LAST_NAME;
+		os << last_name;
 		os.width(FIRST_NAME_WIDTH);
-		os << FIRST_NAME;
+		os << first_name;
 		os.width(AGE_WIDTH);
 		os << get_age();
 		return os;
 	}
-	virtual std::ifstream& read(std::ifstream& is)
+	virtual std::ofstream& write(std::ofstream& os)const
 	{
-
+		//return os << LAST_NAME << " " << FIRST_NAME << " " << get_age();
+		os.width(TYPE_WIDTH);
+		os << std::left;
+		os << std::string(typeid(*this).name() + 6) + ":";
+		os.width(LAST_NAME_WIDTH);
+		os << last_name;
+		os.width(FIRST_NAME_WIDTH);
+		os << first_name;
+		os.width(TIMESTAMP_WIDTH);
+		os << get_birth_date_timestamp();
+		return os;
 	}
+
+
 	/*
 	-----------------------------
 	__vfptr - Virtual Functions Pointers (Таблица указателей на виртуальные функции)
@@ -133,9 +151,9 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 		<< " " << obj.get_first_name()
 		<< " " << obj.get_age();*/
 }
-std::ifstream& operator>>(std::ifstream& is, Human& obj)
+std::ofstream& operator<<(std::ofstream& ofs, const Human& obj)
 {
-
+	return obj.write(ofs);
 }
 
 #define ACADEMY_MEMBER_TAKE_PARAMETERS const std::string& speciality
@@ -172,15 +190,23 @@ public:
 		//Human::info(os);	//Вызываем метод info() для класса 'Human'.
 		//cout << speciality << endl;
 	}
+	std::ofstream& write(std::ofstream& os)const override
+	{
+		Human::write(os);
+		os.width(SPECIALITY_WIDTH);
+		os << speciality;
+		return os;
+	}
+
 };
 
 #define STUDENT_TAKE_PARAMETERS const std::string& group, double rating, double attendance
 #define STUDENT_GIVE_PARAMETERS group, rating, attendance
 class Student :public AcademyMember
 {
-	static const int GROUP_WIDTH = 5;
-	static const int RATING_WIDTH = 5;
-	static const int ATTENDANCE_WIDTH = 5;
+	static const int GROUP_WIDTH = 8;
+	static const int RATING_WIDTH = 8;
+	static const int ATTENDANCE_WIDTH = 8;
 	std::string group;
 	double rating;
 	double attendance;
@@ -239,6 +265,18 @@ public:
 		//AcademyMember::info();
 		//cout << group << " " << rating << " " << attendance << endl;
 	}
+	std::ofstream& write(std::ofstream& os)const override
+	{
+		AcademyMember::write(os);
+		os.width(GROUP_WIDTH);
+		os << group;
+		os.width(RATING_WIDTH);
+		os << rating;
+		os.width(ATTENDANCE_WIDTH);
+		os << attendance;
+		return os;
+	}
+
 };
 
 #define TEACHER_TAKE_PARAMETERS int experience
@@ -269,10 +307,18 @@ public:
 	//				Methods:
 	std::ostream& info(std::ostream& os)const
 	{
-		return AcademyMember::info(os) << " " << experience;
+		return AcademyMember::info(os) << experience;
 		//AcademyMember::info();
 		//cout << experience << endl;
 	}
+	std::ofstream& write(std::ofstream& os)const
+	{
+		AcademyMember::write(os) << experience;
+		return os;
+		//AcademyMember::info();
+		//cout << experience << endl;
+	}
+
 };
 
 #define GRADUATE_TAKE_PARAMETERS const std::string& subject

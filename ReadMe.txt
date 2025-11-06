@@ -3,6 +3,9 @@ https://www.youtube.com/playlist?list=PLeqyOOqxeiIOkhSw2O_jcH4ud2dGc1wMs
 
 https://www.codewars.com/kata/578b4f9b7c77f535fc00002f
 
+TODO:
+Прочитать группу из файла, и загрузить ее в массив;
+
 DONE:
 1. Из файла '201 RAW.txt' создать файл '201 ready.txt', и в этом файле	DONE
    столбики с IP и MAC адресом должны быть поменяны местами.
