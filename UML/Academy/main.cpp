@@ -1,6 +1,7 @@
 ﻿#define _CRT_SECURE_NO_WARNINGS
 #include<iostream>
 #include<fstream>
+#include<sstream>
 #include<string>
 #include<time.h>
 using std::cin;
@@ -130,6 +131,14 @@ public:
 		return os;
 	}
 
+	virtual std::ifstream& read(std::ifstream& ifs)
+	{
+		ifs >> last_name >> first_name;
+		time_t birth_date_timestamp;
+		ifs >> birth_date_timestamp;
+		this->birth_date = *localtime(&birth_date_timestamp);
+		return ifs;	//ifs - input file stream
+	}
 
 	/*
 	-----------------------------
@@ -154,6 +163,10 @@ std::ostream& operator<<(std::ostream& os, const Human& obj)
 std::ofstream& operator<<(std::ofstream& ofs, const Human& obj)
 {
 	return obj.write(ofs);
+}
+std::ifstream& operator>>(std::ifstream& ifs, Human& obj)
+{
+	return obj.read(ifs);
 }
 
 #define ACADEMY_MEMBER_TAKE_PARAMETERS const std::string& speciality
@@ -197,7 +210,14 @@ public:
 		os << speciality;
 		return os;
 	}
-
+	std::ifstream& read(std::ifstream& ifs) override
+	{
+		Human::read(ifs);
+		char buffer[41] = {};
+		ifs.read(buffer, 40);
+		speciality = buffer;
+		return ifs;
+	}
 };
 
 #define STUDENT_TAKE_PARAMETERS const std::string& group, double rating, double attendance
@@ -276,7 +296,12 @@ public:
 		os << attendance;
 		return os;
 	}
-
+	virtual std::ifstream& read(std::ifstream& ifs)override
+	{
+		AcademyMember::read(ifs);
+		ifs >> group >> rating >> attendance;
+		return ifs;
+	}
 };
 
 #define TEACHER_TAKE_PARAMETERS int experience
@@ -318,7 +343,12 @@ public:
 		//AcademyMember::info();
 		//cout << experience << endl;
 	}
-
+	std::ifstream& read(std::ifstream& ifs)override
+	{
+		AcademyMember::read(ifs);
+		ifs >> experience;
+		return ifs;
+	}
 };
 
 #define GRADUATE_TAKE_PARAMETERS const std::string& subject
@@ -356,12 +386,21 @@ public:
 		//Student::info();
 		//cout << subject << endl;
 	}
+	std::ifstream& read(std::ifstream& ifs)
+	{
+		Student::read(ifs);
+		std::getline(ifs, subject);
+		return ifs;
+	}
 };
 
 void Print(Human* group[], const int n);
+void Clear(Human* group[], const int n);
 void Save(Human* group[], const int n, const std::string& filename);
+Human** Load(const std::string& filename, int& count);
 
 //#define INHERITANCE
+//#define WRITE_TO_FILE
 
 void main()
 {
@@ -381,8 +420,10 @@ void main()
 	Teacher teacher("Einstein", "Albert", "1979.03.14", "Astronomy", 20);
 	teacher.info();
 #endif // INHERITANCE
+
+#ifdef WRITE_TO_FILE
 	//Generalisation - обобщение;
-	//Upcast - это приведение дочернего объекта к базовому типу;
+//Upcast - это приведение дочернего объекта к базовому типу;
 	Human* group[] =
 	{
 		new Student("Чухарев", "Матвей", "2009.09.02", "Разработка программного обеспечения", "P_421", 100, 100),
@@ -401,6 +442,13 @@ void main()
 		1. Указатели на базовый класс;
 		2. Виртуальные функции; Specialization
 	*/
+#endif // WRITE_TO_FILE
+
+	int n = 0;
+	Human** group = Load("group.txt", n);
+	Print(group, n);
+	Clear(group, n);
+	group = nullptr;
 }
 void Print(Human* group[], const int n)
 {
@@ -414,6 +462,15 @@ void Print(Human* group[], const int n)
 		cout << delimiter << endl;
 	}
 }
+void Clear(Human* group[], const int n)
+{
+	for (int i = 0; i < n; i++)
+	{
+		delete group[i];
+	}
+	delete[] group;
+}
+
 void Save(Human* group[], const int n, const std::string& filename)
 {
 	std::ofstream fout(filename);
@@ -425,4 +482,61 @@ void Save(Human* group[], const int n, const std::string& filename)
 	std::string cmd = "notepad ";
 	cmd += filename;
 	system(cmd.c_str());
+}
+Human* HumanFactory(const std::string& type)
+{
+	Human* human = nullptr;
+	if (type.find("Human") != std::string::npos)	human = new Human("", "", "");
+	if (type.find("Student") != std::string::npos)	human = new Student("", "", "", "", "", 0, 0);
+	if (type.find("Graduate") != std::string::npos)	human = new Graduate("", "", "", "", "", 0, 0, "");
+	if (type.find("Teacher") != std::string::npos)	human = new Teacher("", "", "", "", 0);
+	return human;
+}
+Human** Load(const std::string& filename, int& count)
+{
+	Human** group = nullptr;
+	count = 0;
+	std::ifstream fin(filename);
+	if (fin.is_open())
+	{
+		//1) Считаем количество объектов в файле:
+		std::string buffer;
+		while (!fin.eof())
+		{
+			std::getline(fin, buffer);
+			if (buffer.size() == 0)continue;
+			count++;	//Ключевое слово 'continue' прерывает текущую итерацию, и переходит к следующей.
+						//Ключевое слово 'break' прерывает текущую итерацию и все последующие.
+		}
+		if (count == 0)return nullptr;	//Если файл пуст, прерываем работу функции.
+		//2) Выделяем память под массив объектов:
+		group = new Human*[count] {};
+
+		//3) Производим возврат в начало, для того чтобы прочитать обеъекты:
+		cout << fin.tellg() << endl;
+		fin.clear();		//очищаем поток
+		fin.seekg(0);		//переходим в начало файла
+		cout << fin.tellg() << endl;
+
+		//4) Загружаем объекты из файла:
+		for (int i = 0; i < count; )
+		{
+			std::string type;
+			std::getline(fin, type, ':');//	До какого символа читать строку
+			if (type.size() == 0)continue;
+			//cout << type << endl;
+			group[i] = HumanFactory(type);
+			fin >> *group[i];
+			i++;
+			/*std::string object;
+			std::getline(fin, object);
+			cout << object << endl;*/
+		}
+	}
+	else
+	{
+		std::cerr << "Error:file not found" << endl;
+	}
+	fin.close();
+	return group;
 }
